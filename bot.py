@@ -173,7 +173,10 @@ class NullJsBot(Bot):
         for location in possible_locations:
             tile = self.game.board.tiles[int(location[0])][int(location[1])]
             if (type(tile) is FriesTile or type(tile) is BurgerTile) and str(tile.hero_id) != str(self.id):
-                if tile.hero_id == '-' and random.uniform(0, 1) < 0.5:
-                    return location[2]
+                if tile.hero_id == '-':
+                    if type(tile) is BurgerTile and random.uniform(0, 1) < 0.6:
+                        return location[2]
+                    elif random.uniform(0, 1) < 0.3:
+                        return location[2]
                 else:
                     return location[2]

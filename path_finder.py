@@ -31,8 +31,11 @@ class SquareGrid:
         return self.board.passable(id) or id == self.end or id == self.start
 
     def cost(self, _from, _to):
-        if self.avoid_forks and self.board.tiles[_to[0]][_to[1]] == -3:
-            return 5
+        if self.board.tiles[_to[0]][_to[1]] == -3:
+            if self.avoid_forks:
+                return 10
+            else:
+                return 2
         else:
             return 1
 
