@@ -58,6 +58,8 @@ class NullJsBot(Bot):
         if self.life < 25 and self.calorie > 30:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
+        self.maybe_kill_someone()
+
         objective = self.objectives[0]
 
         if self._dist(self.hero_pos, objective) == 1:
