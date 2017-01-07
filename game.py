@@ -58,7 +58,7 @@ class Game:
                 elif obj == SPIKE:
                     self.spikes_locs.add((row, col))
                 elif obj == CUSTOMER:
-                    id = self.board.tiles[row][col][-1]
+                    # id = self.board.tiles[row][col][-1]
                     self.customers_locs[id] = (row, col)
 
 

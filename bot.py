@@ -12,7 +12,11 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 def pathfinding(state, start, target):
     payload = {'map': state, 'size': int(sqrt(len(training_map) / 2)), 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
     response = requests.get(pathfinding_url, params=payload)
-    return response.json()['direction']
+    try:
+        direction = response.json()['direction']
+        return direction
+    except KeyError:
+        return 'Stay'
 
 def customer_cost_function(customer):
     return customer.burger + customer.french_fries
@@ -68,8 +72,8 @@ class NullJsBot(Bot):
             objectives.append(self.food_finder.get_closest_fries(self.hero_pos))
 
         print(objectives)
-        print(self.game.customers_locs[self.game.customers[0].id])
-        objectives.append(self.game.customers_locs[self.game.customers[0].id])
+        #print(self.game.customers_locs[self.game.customers[0].id])
+        #objectives.append(self.game.customers_locs[self.game.customers[0].id])
         self.objectives = objectives
 
     def _dist(self, loc):
