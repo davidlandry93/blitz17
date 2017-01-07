@@ -178,5 +178,5 @@ class NullJsBot(Bot):
                         return location[2]
                     elif random.uniform(0, 1) < 0.3:
                         return location[2]
-                else:
+                elif random.uniform(0, 1) < 0.8:
                     return location[2]
