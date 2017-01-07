@@ -1,5 +1,5 @@
 from queue import PriorityQueue
-from game import Board
+#from game import Board
 
 class SquareGrid:
     def __init__(self, board):
@@ -11,6 +11,9 @@ class SquareGrid:
 
     def passable(self, id):
         return self.board.passable(id)
+
+    def cost(self, _from, _to):
+        return 1
 
     def neighbors(self, id):
         (x, y) = id
@@ -28,7 +31,6 @@ def heuristic(a, b):
 
 def a_star_search(graph, start, goal):
     frontier = PriorityQueue()
-    #frontier.put(start, 0)
     frontier.put(start, 0)
     came_from = {}
     cost_so_far = {}
@@ -36,7 +38,7 @@ def a_star_search(graph, start, goal):
     cost_so_far[start] = 0
 
     while not frontier.empty():
-        current = frontier.get() #frontier.get()
+        current = frontier.get()
 
         if current == goal:
             break
@@ -57,32 +59,45 @@ def reconstruct_path(came_from, start, goal):
     while current != start:
         current = came_from[current]
         path.append(current)
-    path.append(start) # optional
     path.reverse() # optional
     return path
 
 
 def find_path(board, start, goal):
-    graph = SquareGrid(board)
-    came_from, cost_so_far = a_star_search(graph, start, goal)
-    print(came_from)
-    print(cost_so_far)
-    path = reconstruct_path(came_from, start, goal)
-    return path
+    try:
+        graph = SquareGrid(board)
+        came_from, cost_so_far = a_star_search(graph, start, goal)
+        path = reconstruct_path(came_from, start, goal)
+        return path
+    except:
+        return []
+
+def direction(path):
+    if len(path) < 2:
+        return 'Stay'
+
+    x0 = path[0][0]
+    y0 = path[0][1]
+    x1 = path[1][0]
+    y1 = path[1][1]
+
+    if y1 - y0 > 0:
+        return 'East'
+    if y1 - y0 < 0:
+        return 'West'
+    if x1 - x0 > 0:
+        return 'South'
+    if x1 - x0 < 0:
+        return 'North'
+
+    return 'Stay'
 
 
-if __name__ == '__main__':
-    training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
+# if __name__ == '__main__':
+#     training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
 
-    board = Board({'size': 12, 'tiles': training_map})
+#     board = Board({'size': 12, 'tiles': training_map})
+#     path = find_path(board, (2, 7), (9, 7))
 
-    print(board.tiles)
-
-    for x, y in enumerate(range(12)):
-        if board.passable((x,y)):
-            print((x,y))
-
-#    print(board.passable((2,5)))
- #   print(board.passable((2,6)))
-
-    print(find_path(board, (2, 3), (2, 6)))
+#     print(path)
+#     print(direction(path))

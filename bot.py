@@ -1,24 +1,42 @@
 from random import choice
-from game import Game
+from game import Game, Board
 from food import FoodFinder
 import requests
 from math import sqrt
+from path_finder import find_path, direction
 
 training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
 
 pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
 # Here state is the string of the map.
+
+#old version
 def pathfinding(state, start, target, size):
     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
 
+    print('calling pathfinder...')
+
     response = requests.get(pathfinding_url, params=payload)
+
+    print('Reponse is: ' + str(response.json()))
 
     try:
         direction = response.json()['direction']
     except KeyError:
         direction = None
     return direction
+
+# AStar
+# def pathfinding(state, start, target, size):
+#     print('calling pathfinder...')
+#     direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
+#     print('A Star returned ' + direction_)
+#     if direction_ == 'Stay':
+#         direction_ = choice(['North', 'South', 'East', 'West'])
+
+#     print('Reponse is: ' + direction_)
+#     return direction_
 
 
 class Bot:

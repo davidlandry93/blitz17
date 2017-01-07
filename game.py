@@ -100,7 +100,7 @@ class Board:
         """True if can walk through."""
         x, y = loc
         pos = self.tiles[x][y]
-        return (pos != WALL) and (pos != TAVERN) and isinstance(pos, tuple) and not isinstance(pos, FriesTile) and not isinstance(pos, BurgerTile)
+        return (pos != WALL) and (pos != TAVERN) and not isinstance(pos, tuple) and not isinstance(pos, FriesTile) and not isinstance(pos, BurgerTile)
 
     def to(self, loc, direction):
         """Calculate a new location given the direction."""
