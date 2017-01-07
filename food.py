@@ -26,7 +26,7 @@ class FoodFinder:
     def _get_closest(self, food_list, player_loc):
         best = {"dist": inf, "loc": None}
         for food_loc in food_list:
-            dist = abs(player_loc[0] - food_loc[0]) + abs(player_loc[1] + food_loc[1])
+            dist = abs(player_loc[0] - food_loc[0]) + abs(player_loc[1] - food_loc[1])
             if dist < best['dist']:
                 best['dist'] = dist
                 best['loc'] = food_loc
