@@ -11,7 +11,7 @@ class FoodFinder:
         for key, val in self.game.burger_locs.items():
             if val != player_id:
                 burger_list.append(key)
-        return self._get_closest(list(self.game.burger_locs), player_loc)
+        return self._get_closest(burger_list, player_loc)
 
     def get_closest_fries(self, player_loc, player_id):
         fries_list = []
