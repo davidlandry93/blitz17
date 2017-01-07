@@ -15,11 +15,7 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 def pathfinding(state, start, target, size):
     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
 
-    print('calling pathfinder...')
-
     response = requests.get(pathfinding_url, params=payload)
-
-    print('Reponse is: ' + str(response.json()))
 
     try:
         direction = response.json()['direction']
@@ -90,6 +86,7 @@ class NullJsBot(Bot):
             direction = choice(['North', 'South', 'East', 'West'])
 
         print('Objectives: ' + str(self.objectives))
+        print('Hero:' + str(self.hero_pos))
 
         return direction
 
