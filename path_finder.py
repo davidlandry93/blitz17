@@ -68,9 +68,13 @@ def find_path(board, start, goal):
         graph = SquareGrid(board)
         came_from, cost_so_far = a_star_search(graph, start, goal)
         path = reconstruct_path(came_from, start, goal)
-        return path
-    except:
-        return []
+    except Exception as e:
+        print(e)
+        path = []
+
+    print(path)
+
+    return path
 
 def direction(path):
     if len(path) < 2:
