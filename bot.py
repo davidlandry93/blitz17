@@ -14,19 +14,29 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 #old version
 # def pathfinding(state, start, target, size):
 #     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
+
+#     print('calling pathfinder...')
+
 #     response = requests.get(pathfinding_url, params=payload)
+
+#     print('Reponse is: ' + str(response.json()))
+
 #     try:
 #         direction = response.json()['direction']
-#         return direction
 #     except KeyError:
-#         print('Random move')
-#         return choice(['North', 'South', 'East', 'West'])
+#         direction = None
+#     return direction
 
 # AStar
 def pathfinding(state, start, target, size):
-    return direction(find_path(Board({'size': size, 'tiles': state}), start, target))
+    print('calling pathfinder...')
+    direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
+    print('A Star returned ' + direction_)
+    if direction_ == 'Stay':
+        direction_ = choice(['North', 'South', 'East', 'West'])
 
-
+    print('Reponse is: ' + direction_)
+    return direction_
 
 
 class Bot:
@@ -61,21 +71,25 @@ class NullJsBot(Bot):
         self.current_customer = self.smallest_order(self.game)
         self.objectives = self.create_objective_list(self.current_customer)
 
-        if self.life < 25 and self.calorie > 30:
+        if self.life < 25 and self.calorie > 30 and len(self.objectives) > 1:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
         self.maybe_kill_someone()
 
         objective = self.objectives[0]
 
-        if self._dist(self.hero_pos, objective) == 1:
-            self.objectives.pop(0)
-            if len(self.objectives) == 0:
-                self.objectives = []
-                self.current_customer = None
-                self.customer_number += 1
+        direction = None
+        tries = 0
 
-        return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective, state['game']['board']['size'])
+        while direction is None and tries < min(len(self.objectives), 1):
+            direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[tries], state['game']['board']['size'])
+            tries += 1
+
+        if direction is None:
+            print('RANDOM MOVE')
+            direction = choice(['North', 'South', 'East', 'West'])
+
+        return direction
 
     def create_objective_list(self, customer):
         customer.loc = self.game.customers_locs[customer.id]
