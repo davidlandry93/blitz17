@@ -113,6 +113,9 @@ class NullJsBot(Bot):
                 our_hero = h
 
         for h in other_heros:
-            if h.life < our_hero.life and self._dist(self.hero_pos, h.pos) <= self.KILL_DISTANCE:
-                self.objectives = [h.pos]
+            h_pos = (h.pos['x'], h.pos['y'])
+            print(self.hero_pos)
+            print(h_pos)
+            if h.life < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
+                self.objectives = [h_pos]
                 break
