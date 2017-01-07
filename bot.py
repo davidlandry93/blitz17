@@ -1,5 +1,5 @@
 from random import choice
-from game import Game, Board
+from game import Game, Board, FriesTile, BurgerTile
 from food import FoodFinder
 import requests
 from math import sqrt
@@ -63,6 +63,10 @@ class NullJsBot(Bot):
         self.id = state['hero']['id']
         self.inventory['burger'] = state['hero']['burgerCount']
         self.inventory['fries'] = state['hero']['frenchFriesCount']
+
+        nearby_food = self.nearby_food()
+        if nearby_food:
+            return nearby_food
 
         self.current_customer = self.smallest_order(self.game)
         self.objectives = self.create_objective_list(self.current_customer)
@@ -152,3 +156,17 @@ class NullJsBot(Bot):
                 self.objectives = [h_pos]
                 print('ATTACK')
                 break
+
+    def nearby_food(self):
+        possible_locations = [(self.hero_pos[0] - 1, self.hero_pos[1], 'North'),
+                              (self.hero_pos[0] + 1, self.hero_pos[1], 'South'),
+                              (self.hero_pos[0], self.hero_pos[1] - 1, 'West'),
+                              (self.hero_pos[0], self.hero_pos[1] + 1, 'East')]
+
+        for location in possible_locations:
+            tile = self.game.board.tiles[int(location[0])][int(location[1])]
+            if (type(tile) is FriesTile or type(tile) is BurgerTile) and str(tile.hero_id) != str(self.id):
+                print('Hero: ' + str(self.hero_pos))
+                print('Nearby: ' + location[2])
+                print('Location: ' + str((location[0], location[1])))
+                return location[2]
