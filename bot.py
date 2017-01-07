@@ -1,5 +1,5 @@
 from random import choice
-from game import Game
+from game import Game, Board
 from food import FoodFinder
 import requests
 from math import sqrt
