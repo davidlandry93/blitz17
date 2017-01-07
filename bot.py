@@ -26,7 +26,7 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 #     except KeyError:
 #         direction = None
 #     return direction
-        response = requests.get(pathfinding_url, params=payload, timeout=0.9)
+
 
 # AStar
 def pathfinding(state, start, target, size):
