@@ -46,7 +46,7 @@ class NullJsBot(Bot):
         self.food_finder = FoodFinder(self.game)
         self.hero_pos = (state['hero']['pos']['x'], state['hero']['pos']['y'])
 
-        smallest_order(game)
+        smallest_order(self.game)
 
         if not self.current_order:
             self.current_order = {'burger': self.game.customers[0].burger, 'fries': self.game.customers[0].french_fries}
@@ -67,6 +67,9 @@ class NullJsBot(Bot):
         for _ in range(self.current_order['fries']):
             objectives.append(self.food_finder.get_closest_fries(self.hero_pos))
 
+        print(objectives)
+        print(self.game.customers_locs[self.game.customers[0].id])
+        objectives.append(self.game.customers_locs[self.game.customers[0].id])
         self.objectives = objectives
 
     def _dist(self, loc):
