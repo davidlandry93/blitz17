@@ -8,10 +8,16 @@ training_map = """################################C1    C2############F-        
 
 pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
+# Here state is the string of the map.
 def pathfinding(state, start, target):
     payload = {'map': state, 'size': int(sqrt(len(training_map) / 2)), 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
     response = requests.get(pathfinding_url, params=payload)
     return response.json()['direction']
+
+def smallest_order(game):
+    customers = game.customers
+
+    best = min(customers, lambda x: x.burger + x.french_fries)
 
 class Bot:
     pass
