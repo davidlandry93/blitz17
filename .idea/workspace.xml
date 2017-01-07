@@ -2,9 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9200de30-b202-41a9-a73a-240d53c7f05d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/competition" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/training" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bot.py" afterPath="$PROJECT_DIR$/bot.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BACKUP_8111.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BACKUP_8198.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BACKUP_8513.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BACKUP_8587.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BASE_8111.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BASE_8198.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BASE_8513.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_BASE_8587.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_LOCAL_8111.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_LOCAL_8198.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_LOCAL_8513.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_LOCAL_8587.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_REMOTE_8111.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_REMOTE_8198.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_REMOTE_8513.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/bot_REMOTE_8587.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="blitz17.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,11 +56,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="food.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="food.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/food.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state relative-caret-position="144">
+              <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -102,6 +127,7 @@
         <option value="$PROJECT_DIR$/utils.py" />
         <option value="$PROJECT_DIR$/food.py" />
         <option value="$PROJECT_DIR$/bot.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -458,6 +484,7 @@
     </layout>
   </component>
   <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.gitignore" />
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.md" />
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -522,8 +549,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/food.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        <state relative-caret-position="144">
+          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="7" selection-start-line="5" selection-start-column="7" selection-end-line="5" selection-end-column="7" />
           <folding />
         </state>
       </provider>
