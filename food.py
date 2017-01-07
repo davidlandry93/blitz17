@@ -8,7 +8,7 @@ class FoodFinder:
 
     def get_closest_burger_or_fries(self, player_loc, player_id, objective_list):
         food_list = []
-        for key, val in self.game.burger_locs.items() + self.game.fries_locs.items():
+        for key, val in {**self.game.burger_locs, **self.game.fries_locs}.items():
             if val != player_id and key not in objective_list:
                 food_list.append(key)
         return self._get_closest(food_list, player_loc)

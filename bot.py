@@ -71,6 +71,8 @@ class NullJsBot(Bot):
             print('RANDOM MOVE')
             direction = choice(['North', 'South', 'East', 'West'])
 
+        print('Objectives: ' + str(self.objectives))
+
         return direction
 
     def create_objective_list(self, customer):
