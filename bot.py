@@ -118,4 +118,5 @@ class NullJsBot(Bot):
             print(h_pos)
             if h.life < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
                 self.objectives = [h_pos]
+                print('ATTACK')
                 break
