@@ -60,31 +60,21 @@ class NullJsBot(Bot):
         self.current_customer = self.smallest_order(self.game)
         self.objectives = self.create_objective_list(self.current_customer)
 
-        if self.life < 25 and self.calorie > 30:
+        if self.life < 25 and self.calorie > 30 and len(self.objectives) > 1:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
         self.maybe_kill_someone()
 
         objective = self.objectives[0]
 
-        # if self._dist(self.hero_pos, objective) == 1:
-        #     self.objectives.pop(0)
-        #     if len(self.objectives) == 0:
-        #         self.objectives = []
-        #         self.current_customer = None
-        #         self.customer_number += 1
-
-        print('Current objective is: ' + str(objective))
-        print('Current position is: ' + str(self.hero_pos))
-        print('List is: ' + str(self.objectives))
-
         direction = None
         tries = 0
-        while direction == None and tries < min(len(self.objectives), 1):
+
+        while direction is None and tries < min(len(self.objectives), 1):
             direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[tries], state['game']['board']['size'])
             tries += 1
 
-        if direction == None:
+        if direction is None:
             print('RANDOM MOVE')
             direction = choice(['North', 'South', 'East', 'West'])
 
