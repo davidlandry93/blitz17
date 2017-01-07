@@ -8,11 +8,24 @@ training_map = """################################C1    C2############F-        
 
 pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
+# Here state is the string of the map.
 def pathfinding(state, start, target):
     payload = {'map': state, 'size': int(sqrt(len(training_map) / 2)), 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
     response = requests.get(pathfinding_url, params=payload)
     return response.json()['direction']
 
+def customer_cost_function(customer):
+    return customer.burger + customer.french_fries
+
+def smallest_order(game):
+    customers = game.customers
+
+    print(customers[0].french_fries)
+
+    best = min(customers, key=customer_cost_function)
+    print('smallest order' + str(best))
+
+    return best
 
 class Bot:
     pass
@@ -32,6 +45,8 @@ class NullJsBot(Bot):
         self.game = Game(state)
         self.food_finder = FoodFinder(self.game)
         self.hero_pos = (state['hero']['pos']['x'], state['hero']['pos']['y'])
+
+        smallest_order(game)
 
         if not self.current_order:
             self.current_order = {'burger': self.game.customers[0].burger, 'fries': self.game.customers[0].french_fries}
