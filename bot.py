@@ -28,6 +28,7 @@ class Bot:
 
 
 class NullJsBot(Bot):
+    KILL_DISTANCE = 2
 
     def __init__(self):
         self.current_customer = None  # {'burger': 1, 'fries': 2}
@@ -39,6 +40,7 @@ class NullJsBot(Bot):
         self.customer_number = 0
         self.life = 0
         self.calorie = 0
+        self.id = 0
 
     def move(self, state):
         self.game = Game(state)
@@ -46,10 +48,12 @@ class NullJsBot(Bot):
         self.hero_pos = (state['hero']['pos']['x'], state['hero']['pos']['y'])
         self.life = state['hero']['life']
         self.calorie = state['hero']['calories']
+        self.id = state['hero']['id']
+        self.inventory['burger'] = state['hero']['burgerCount']
+        self.inventory['fries'] = state['hero']['frenchFriesCount']
 
-        if not self.current_customer:
-            self.current_customer = self.smallest_order(self.game)
-            self.objectives = self.create_objective_list(self.current_customer)
+        self.current_customer = self.smallest_order(self.game)
+        self.objectives = self.create_objective_list(self.current_customer)
 
         if self.life < 25 and self.calorie > 30:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
@@ -68,18 +72,23 @@ class NullJsBot(Bot):
     def create_objective_list(self, customer):
         customer.loc = self.game.customers_locs[customer.id]
         objectives = []
-        for _ in range(customer.burger):
-            objectives.append(self.food_finder.get_closest_burger(self.hero_pos))
+        last_pos = self.hero_pos
+        for _ in range(customer.burger - self.inventory['burger']):
+            pos = self.food_finder.get_closest_burger(last_pos, self.id)
+            objectives.append(pos)
+            last_pos = pos
 
-        for _ in range(customer.french_fries):
-            objectives.append(self.food_finder.get_closest_fries(self.hero_pos))
+        for _ in range(customer.french_fries - self.inventory['fries']):
+            pos = self.food_finder.get_closest_fries(last_pos, self.id)
+            objectives.append(pos)
+            last_pos = pos
 
         objectives.append(customer.loc)
         return objectives
 
     def _dist(self, start, loc):
         return abs(start[0] - loc[0]) + abs(start[1] - loc[1])
-
+        
     def customer_cost_function(self, customer):
         objectives = self.create_objective_list(customer)
         cost = 0
@@ -91,3 +100,17 @@ class NullJsBot(Bot):
         customers = game.customers
         best = min(customers, key=self.customer_cost_function)
         return best
+
+    def maybe_kill_someone(self):
+        our_hero = None
+        other_heros = []
+        for h in self.game.heroes:
+            if h.name != 'NullJS':
+                other_heros.append(h)
+            else:
+                our_hero = h
+
+        for h in other_heros:
+            if h.life < our_hero.life and self._dist(h.pos) <= self.KILL_DISTANCE:
+                self.objectives = [h.pos]
+                break
