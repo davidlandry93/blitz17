@@ -37,6 +37,7 @@ class Bot:
 
 
 class NullJsBot(Bot):
+    KILL_DISTANCE = 2
 
     def __init__(self):
         self.current_order = None  # {'burger': 1, 'fries': 2}
@@ -66,6 +67,8 @@ class NullJsBot(Bot):
         if self.life < 25 and self.calorie > 30:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
+        maybe_kill_someone()
+
         objective = self.objectives[0]
 
         if self._dist(objective) == 1:
@@ -90,3 +93,18 @@ class NullJsBot(Bot):
 
     def _dist(self, loc):
         return abs(self.hero_pos[0] - loc[0]) + abs(self.hero_pos[1] - loc[1])
+
+
+    def maybe_kill_someone(self):
+        our_hero = None
+        other_heros = []
+        for h in self.game.heroes:
+            if h.name != 'NullJS':
+                other_heros.append(h)
+            else:
+                our_hero = h
+
+        for h in other_heros:
+            if h.life < our_hero.life and self._dist(h.pos) <= self.KILL_DISTANCE:
+                self.objectives = [h.pos]
+                break
