@@ -12,26 +12,30 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 # Here state is the string of the map.
 
 #old version
-def pathfinding(state, start, target, size):
-    payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
+# def pathfinding(state, start, target, size):
+#     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
 
-    try:
+#     print('calling pathfinder...')
+
+#     response = requests.get(pathfinding_url, params=payload)
+
+#     print('Reponse is: ' + str(response.json()))
+
+#     try:
+#         direction = response.json()['direction']
+#     except KeyError:
+#         direction = None
+#     return direction
         response = requests.get(pathfinding_url, params=payload, timeout=0.9)
-        direction = response.json()['direction']
-    except (KeyError, requests.exceptions.Timeout):
-        direction = None
-    return direction
 
 # AStar
-# def pathfinding(state, start, target, size):
-#     print('calling pathfinder...')
-#     direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
-#     print('A Star returned ' + direction_)
-#     if direction_ == 'Stay':
-#         direction_ = choice(['North', 'South', 'East', 'West'])
+def pathfinding(state, start, target, size):
+    print('calling pathfinder...')
+    direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
+                                     #(start[1], start[0]), (target[1], target[0]) ))
+    print('A Star returned ' + str(direction_))
 
-#     print('Reponse is: ' + direction_)
-#     return direction_
+    return direction_
 
 
 class Bot:
