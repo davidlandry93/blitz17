@@ -11,13 +11,18 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 # Here state is the string of the map.
 def pathfinding(state, start, target, size):
     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
+
+    print('calling pathfinder...')
+
     response = requests.get(pathfinding_url, params=payload)
+
+    print('Reponse is: ' + str(response.json()))
+
     try:
         direction = response.json()['direction']
-        return direction
     except KeyError:
-        print('Random move')
-        return choice(['North', 'South', 'East', 'West'])
+        direction = None
+    return direction
 
 
 
@@ -62,14 +67,28 @@ class NullJsBot(Bot):
 
         objective = self.objectives[0]
 
-        if self._dist(self.hero_pos, objective) == 1:
-            self.objectives.pop(0)
-            if len(self.objectives) == 0:
-                self.objectives = []
-                self.current_customer = None
-                self.customer_number += 1
+        # if self._dist(self.hero_pos, objective) == 1:
+        #     self.objectives.pop(0)
+        #     if len(self.objectives) == 0:
+        #         self.objectives = []
+        #         self.current_customer = None
+        #         self.customer_number += 1
 
-        return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective, state['game']['board']['size'])
+        print('Current objective is: ' + str(objective))
+        print('Current position is: ' + str(self.hero_pos))
+        print('List is: ' + str(self.objectives))
+
+        direction = None
+        tries = 0
+        while direction == None and tries < min(len(self.objectives), 1):
+            direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[tries], state['game']['board']['size'])
+            tries += 1
+
+        if direction == None:
+            print('RANDOM MOVE')
+            direction = choice(['North', 'South', 'East', 'West'])
+
+        return direction
 
     def create_objective_list(self, customer):
         customer.loc = self.game.customers_locs[customer.id]
