@@ -101,8 +101,8 @@ class NullJsBot(Bot):
         fries_required = max(0, customer.french_fries - self.inventory['fries'])
 
         total = burger_required + fries_required
-        while total > 0:
 
+        while total > 0:
             if fries_required > 0 and burger_required > 0:
                 pos = self.food_finder.get_closest_burger_or_fries(last_pos, self.id, objectives)
                 objectives.append(pos)
@@ -129,13 +129,22 @@ class NullJsBot(Bot):
     def customer_cost_function(self, customer):
         objectives = self.create_objective_list(customer)
         cost = 0
-        for i in range(len(objectives) - 1):
-            cost += self._dist(objectives[i], objectives[i + 1])
+        start = self.hero_pos
+        for i in range(len(objectives)):
+            cost += self._dist(start, objectives[i])
+            start = objectives[i]
+
         return cost
 
     def smallest_order(self, game):
         customers = game.customers
-        best = min(customers, key=self.customer_cost_function)
+
+        for customer in customers:
+            customer.loc = self.game.customers_locs[customer.id]
+
+        customers = sorted(customers, key=lambda x: self._dist(self.hero_pos, x.loc))
+
+        best = min(customers[:3], key=self.customer_cost_function)
         return best
 
     def maybe_kill_someone(self):
