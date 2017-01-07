@@ -1,5 +1,5 @@
 from random import choice
-from game import Game, Board
+from game import Game, Board, FriesTile, BurgerTile
 from food import FoodFinder
 import requests
 from math import sqrt
@@ -21,11 +21,12 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
 #     print('Reponse is: ' + str(response.json()))
 
-    # try:
-    #     direction = response.json()['direction']
-    # except KeyError:
-    #     direction = None
-    # return direction
+#     try:
+#         direction = response.json()['direction']
+#     except KeyError:
+#         direction = None
+#     return direction
+
 
 # AStar
 def pathfinding(state, start, target, size):
@@ -66,6 +67,10 @@ class NullJsBot(Bot):
         self.inventory['burger'] = state['hero']['burgerCount']
         self.inventory['fries'] = state['hero']['frenchFriesCount']
 
+        nearby_food = self.nearby_food()
+        if nearby_food:
+            return nearby_food
+
         self.current_customer = self.smallest_order(self.game)
         self.objectives = self.create_objective_list(self.current_customer)
 
@@ -74,20 +79,14 @@ class NullJsBot(Bot):
 
         self.maybe_kill_someone()
 
-        objective = self.objectives[0]
-
-        direction = None
-        tries = 0
-
-        while direction is None and tries < min(len(self.objectives), 1):
-            direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[tries], state['game']['board']['size'])
-            tries += 1
+        direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[0], state['game']['board']['size'])
 
         if direction is None:
             print('RANDOM MOVE')
             direction = choice(['North', 'South', 'East', 'West'])
 
         print('Objectives: ' + str(self.objectives))
+        print('Hero:' + str(self.hero_pos))
 
         return direction
 
@@ -99,8 +98,8 @@ class NullJsBot(Bot):
         fries_required = max(0, customer.french_fries - self.inventory['fries'])
 
         total = burger_required + fries_required
-        while total > 0:
 
+        while total > 0:
             if fries_required > 0 and burger_required > 0:
                 pos = self.food_finder.get_closest_burger_or_fries(last_pos, self.id, objectives)
                 objectives.append(pos)
@@ -127,13 +126,22 @@ class NullJsBot(Bot):
     def customer_cost_function(self, customer):
         objectives = self.create_objective_list(customer)
         cost = 0
-        for i in range(len(objectives) - 1):
-            cost += self._dist(objectives[i], objectives[i + 1])
+        start = self.hero_pos
+        for i in range(len(objectives)):
+            cost += self._dist(start, objectives[i])
+            start = objectives[i]
+
         return cost
 
     def smallest_order(self, game):
         customers = game.customers
-        best = min(customers, key=self.customer_cost_function)
+
+        for customer in customers:
+            customer.loc = self.game.customers_locs[customer.id]
+
+        customers = sorted(customers, key=lambda x: self._dist(self.hero_pos, x.loc))
+
+        best = min(customers[:3], key=self.customer_cost_function)
         return best
 
     def maybe_kill_someone(self):
@@ -151,3 +159,17 @@ class NullJsBot(Bot):
                 self.objectives = [h_pos]
                 print('ATTACK')
                 break
+
+    def nearby_food(self):
+        possible_locations = [(self.hero_pos[0] - 1, self.hero_pos[1], 'North'),
+                              (self.hero_pos[0] + 1, self.hero_pos[1], 'South'),
+                              (self.hero_pos[0], self.hero_pos[1] - 1, 'West'),
+                              (self.hero_pos[0], self.hero_pos[1] + 1, 'East')]
+
+        for location in possible_locations:
+            tile = self.game.board.tiles[int(location[0])][int(location[1])]
+            if (type(tile) is FriesTile or type(tile) is BurgerTile) and str(tile.hero_id) != str(self.id):
+                print('Hero: ' + str(self.hero_pos))
+                print('Nearby: ' + location[2])
+                print('Location: ' + str((location[0], location[1])))
+                return location[2]
