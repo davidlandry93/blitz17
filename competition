@@ -1,2 +1,7 @@
 #!/bin/bash
-python3 client.py 2j12xtr1 competition "$1"
+
+timestamp() {
+      date +"%T"
+}
+
+python3 client.py 2j12xtr1 competition "$1" > "log/competition-$(timestamp)"
