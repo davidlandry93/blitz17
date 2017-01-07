@@ -58,7 +58,7 @@ class Game:
                 elif obj == SPIKE:
                     self.spikes_locs.add((row, col))
                 elif isinstance(obj, tuple):
-                    id = obj[-1]
+                    id = int(obj[-1])
                     self.customers_locs[id] = (row, col)
 
 

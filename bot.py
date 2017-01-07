@@ -9,14 +9,15 @@ training_map = """################################C1    C2############F-        
 pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
 # Here state is the string of the map.
-def pathfinding(state, start, target):
-    payload = {'map': state, 'size': int(sqrt(len(training_map) / 2)), 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
+def pathfinding(state, start, target, size):
+    payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
     response = requests.get(pathfinding_url, params=payload)
     try:
         direction = response.json()['direction']
         return direction
     except KeyError:
-        return 'Stay'
+        print('Random move')
+        return choice(['North', 'South', 'East', 'West'])
 
 def customer_cost_function(customer):
     return customer.burger + customer.french_fries
@@ -57,11 +58,14 @@ class NullJsBot(Bot):
             self.create_objective_list()
 
         objective = self.objectives[0]
+        print(self.objectives)
 
         if self._dist(objective) == 1:
             self.objectives.pop(0)
 
-        return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective)
+        print(self.hero_pos)
+        print(objective)
+        return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective, state['game']['board']['size'])
 
     def create_objective_list(self):
         objectives = []
@@ -71,10 +75,8 @@ class NullJsBot(Bot):
         for _ in range(self.current_order['fries']):
             objectives.append(self.food_finder.get_closest_fries(self.hero_pos))
 
-        print(objectives)
-        #print(self.game.customers_locs[self.game.customers[0].id])
-        #objectives.append(self.game.customers_locs[self.game.customers[0].id])
+        objectives.append(self.game.customers_locs[self.game.customers[0].id])
         self.objectives = objectives
 
     def _dist(self, loc):
-        return abs(self.hero_pos[0] - loc[0]) + (self.hero_pos[1] - loc[1])
+        return abs(self.hero_pos[0] - loc[0]) + abs(self.hero_pos[1] - loc[1])
