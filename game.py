@@ -37,7 +37,7 @@ class Game:
         self.state = state
         self.board = Board(state['game']['board'])
         self.heroes = [Hero(state['game']['heroes'][i]) for i in range(len(state['game']['heroes']))]
-        # self.hero = next(filter(lambda h: h.name == 'NullJS'), self.heros)
+        # self.hero = next(filter(lambda h: h.name == 'NullJS', self.heros))
         self.customers = [Customer(state['game']['customers'][i]) for i in range(len(state['game']['customers']))]
         self.fries_locs = {}
         self.burger_locs = {}
