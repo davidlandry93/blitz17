@@ -76,12 +76,12 @@ class NullJsBot(Bot):
         objectives = []
         last_pos = self.hero_pos
         for _ in range(max(0, customer.burger - self.inventory['burger'])):
-            pos = self.food_finder.get_closest_burger(last_pos, self.id)
+            pos = self.food_finder.get_closest_burger(last_pos, self.id, objectives)
             objectives.append(pos)
             last_pos = pos
 
         for _ in range(max(0, customer.french_fries - self.inventory['fries'])):
-            pos = self.food_finder.get_closest_fries(last_pos, self.id)
+            pos = self.food_finder.get_closest_fries(last_pos, self.id, objectives)
             objectives.append(pos)
             last_pos = pos
 
