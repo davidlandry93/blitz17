@@ -1,1 +1,7 @@
-python3 client.py 2j12xtr1 training
+#!/bin/bash
+
+timestamp() {
+      date +"%T"
+}
+
+python3 client.py 2j12xtr1 training > "log/train-$(timestamp)"
