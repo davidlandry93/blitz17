@@ -58,7 +58,7 @@ class NullJsBot(Bot):
         if self.life < 25 and self.calorie > 30:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
-        # self.maybe_kill_someone()
+        self.maybe_kill_someone()
 
         objective = self.objectives[0]
 
@@ -75,12 +75,12 @@ class NullJsBot(Bot):
         customer.loc = self.game.customers_locs[customer.id]
         objectives = []
         last_pos = self.hero_pos
-        for _ in range(customer.burger - self.inventory['burger']):
+        for _ in range(max(0, customer.burger - self.inventory['burger'])):
             pos = self.food_finder.get_closest_burger(last_pos, self.id)
             objectives.append(pos)
             last_pos = pos
 
-        for _ in range(customer.french_fries - self.inventory['fries']):
+        for _ in range(max(0, customer.french_fries - self.inventory['fries'])):
             pos = self.food_finder.get_closest_fries(last_pos, self.id)
             objectives.append(pos)
             last_pos = pos
