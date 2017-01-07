@@ -14,10 +14,18 @@ def pathfinding(state, start, target):
     response = requests.get(pathfinding_url, params=payload)
     return response.json()['direction']
 
+def customer_cost_function(customer):
+    return customer.burger + customer.french_fries
+
 def smallest_order(game):
     customers = game.customers
 
-    best = min(customers, lambda x: x.burger + x.french_fries)
+    print(customers[0].french_fries)
+
+    best = min(customers, key=customer_cost_function)
+    print('smallest order' + str(best))
+
+    return best
 
 class Bot:
     pass
@@ -32,6 +40,8 @@ class NullJsBot(Bot):
         game = Game(state)
         food_finder = FoodFinder(game)
         hero_pos = state['hero']['pos']
+
+        smallest_order(game)
 
         if not self.current_order:
             self.current_order = {'burger': game.customers[0].burger, 'fries': game.customers[1].french_fries}
