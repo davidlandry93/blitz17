@@ -1,6 +1,7 @@
 from random import choice
 from game import Game, Board, FriesTile, BurgerTile
 from food import FoodFinder
+import random
 import requests
 from math import sqrt
 from path_finder import find_path, direction
@@ -29,10 +30,8 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 
 # AStar
 def pathfinding(state, start, target, size):
-    print('calling pathfinder...')
     direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
                                      #(start[1], start[0]), (target[1], target[0]) ))
-    print('A Star returned ' + str(direction_))
 
     return direction_
 
@@ -81,11 +80,7 @@ class NullJsBot(Bot):
         direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[0], state['game']['board']['size'])
 
         if direction is None:
-            print('RANDOM MOVE')
             direction = choice(['North', 'South', 'East', 'West'])
-
-        print('Objectives: ' + str(self.objectives))
-        print('Hero:' + str(self.hero_pos))
 
         return direction
 
@@ -156,7 +151,6 @@ class NullJsBot(Bot):
             h_pos = (h.pos['x'], h.pos['y'])
             if h.life + 45 < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
                 self.objectives = [h_pos]
-                print('ATTACK')
                 break
 
     def nearby_food(self):
@@ -169,7 +163,7 @@ class NullJsBot(Bot):
         for location in possible_locations:
             tile = self.game.board.tiles[int(location[0])][int(location[1])]
             if (type(tile) is FriesTile or type(tile) is BurgerTile) and str(tile.hero_id) != str(self.id):
-                print('Hero: ' + str(self.hero_pos))
-                print('Nearby: ' + location[2])
-                print('Location: ' + str((location[0], location[1])))
-                return location[2]
+                if tile.hero_id == '-' and random.uniform(0, 1) < 0.5:
+                    return location[2]
+                else:
+                    return location[2]
