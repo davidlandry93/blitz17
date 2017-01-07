@@ -76,12 +76,12 @@ class NullJsBot(Bot):
         objectives = []
         last_pos = self.hero_pos
         for _ in range(max(0, customer.burger - self.inventory['burger'])):
-            pos = self.food_finder.get_closest_burger(last_pos, self.id)
+            pos = self.food_finder.get_closest_burger(last_pos, self.id, objectives)
             objectives.append(pos)
             last_pos = pos
 
         for _ in range(max(0, customer.french_fries - self.inventory['fries'])):
-            pos = self.food_finder.get_closest_fries(last_pos, self.id)
+            pos = self.food_finder.get_closest_fries(last_pos, self.id, objectives)
             objectives.append(pos)
             last_pos = pos
 
@@ -116,8 +116,6 @@ class NullJsBot(Bot):
 
         for h in other_heros:
             h_pos = (h.pos['x'], h.pos['y'])
-            print(self.hero_pos)
-            print(h_pos)
             if h.life < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
                 self.objectives = [h_pos]
                 break
