@@ -1,4 +1,3 @@
-#from queue import PriorityQueue
 import heapq
 from game import Board
 
@@ -18,10 +17,11 @@ class PriorityQueue:
 
 
 class SquareGrid:
-    def __init__(self, board, start, end):
+    def __init__(self, board, start, end, avoid_forks=False):
         self.board = board
         self.start = start
         self.end = end
+        self.avoid_forks = avoid_forks
 
     def in_bounds(self, id):
         (x, y) = id
@@ -31,7 +31,10 @@ class SquareGrid:
         return self.board.passable(id) or id == self.end or id == self.start
 
     def cost(self, _from, _to):
-        return abs(_from[0] - _to[0]) + abs(_from[1] - _to[1])
+        if self.avoid_forks and self.board.tiles[_to[0]][_to[1]] == -3:
+            return 5
+        else:
+            return 1
 
     def neighbors(self, id):
         (x, y) = id
@@ -110,11 +113,11 @@ def reconstruct_path(came_from, start, goal):
     return path
 
 
-def find_path(board, start, goal):
+def find_path(board, start, goal, avoid_forks=False):
     try:
         #print(board.tiles)
-        graph = SquareGrid(board, start, goal)
-        came_from, cost_so_far = dijkstra_search(graph, start, goal)
+        graph = SquareGrid(board, start, goal, avoid_forks)
+        came_from, cost_so_far = a_star_search(graph, start, goal)
         path = reconstruct_path(came_from, start, goal)
     except:
         path = []
@@ -143,11 +146,11 @@ def direction(path):
     return None
 
 
-if __name__ == '__main__':
-    training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
+# if __name__ == '__main__':
+#     training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
 
-    board = Board({'size': 12, 'tiles': training_map})
-    path = find_path(board, (4, 7), (9, 7))
+#     board = Board({'size': 12, 'tiles': training_map})
+#     path = find_path(board, (4, 7), (9, 7))
 
-    print(path)
-    print(direction(path))
+#     print(path)
+#     print(direction(path))

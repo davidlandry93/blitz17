@@ -5,6 +5,8 @@ import random
 import requests
 from math import sqrt
 from path_finder import find_path, direction
+import time
+
 
 training_map = """################################C1    C2############F-            F-########  @1        @4  ######    []  B-B-  []    ####    ##  ####  ##    ####    ##  ####  ##    ####    []  B-B-  []    ######  @2        @3  ########F-            F-############C3    C4################################"""
 
@@ -29,9 +31,11 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 #     return direction
 
 # AStar
-def pathfinding(state, start, target, size):
-    direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
-                                     #(start[1], start[0]), (target[1], target[0]) ))
+def pathfinding(state, start, target, size, avoid_forks=False):
+    b = time.time()
+    direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target, avoid_forks))
+    e = time.time()
+    print('A Star returned ' + str(direction_) + ' in ' + str(e - b))
 
     return direction_
 
@@ -77,7 +81,13 @@ class NullJsBot(Bot):
 
         self.maybe_kill_someone()
 
-        direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[0], state['game']['board']['size'])
+        our_hero = None
+        for h in self.game.heroes:
+            if h.name == 'NullJS':
+                our_hero = h
+                break
+
+        direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[0], state['game']['board']['size'], our_hero.life < 30)
 
         if direction is None:
             direction = choice(['North', 'South', 'East', 'West'])
