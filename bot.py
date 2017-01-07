@@ -19,18 +19,9 @@ def pathfinding(state, start, target, size):
         print('Random move')
         return choice(['North', 'South', 'East', 'West'])
 
-def customer_cost_function(customer):
-    return customer.burger + customer.french_fries
 
-def smallest_order(game):
-    customers = game.customers
 
-    print(customers[0].french_fries)
 
-    best = min(customers, key=customer_cost_function)
-    print('smallest order' + str(best))
-
-    return best
 
 class Bot:
     pass
@@ -39,7 +30,7 @@ class Bot:
 class NullJsBot(Bot):
 
     def __init__(self):
-        self.current_order = None  # {'burger': 1, 'fries': 2}
+        self.current_customer = None  # {'burger': 1, 'fries': 2}
         self.inventory = {'burger': 0, 'fries': 0}
         self.hero_pos = None
         self.food_finder = None
@@ -54,39 +45,49 @@ class NullJsBot(Bot):
         self.food_finder = FoodFinder(self.game)
         self.hero_pos = (state['hero']['pos']['x'], state['hero']['pos']['y'])
         self.life = state['hero']['life']
-        self.life = state['hero']
+        self.calorie = state['hero']['calories']
 
-        smallest_order(self.game)
-
-        if not self.current_order:
-            self.current_order = smallest_order(self.game)
-            self.current_order.loc = self.game.customers[self.current_order.id].id
-            print(self.current_order.loc)
+        if not self.current_customer:
+            self.current_customer = self.smallest_order(self.game)
+            self.objectives = self.create_objective_list(self.current_customer)
 
         if self.life < 25 and self.calorie > 30:
             self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
         objective = self.objectives[0]
 
-        if self._dist(objective) == 1:
+        if self._dist(self.hero_pos, objective) == 1:
             self.objectives.pop(0)
             if len(self.objectives) == 0:
                 self.objectives = []
-                self.current_order = None
+                self.current_customer = None
                 self.customer_number += 1
 
         return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective, state['game']['board']['size'])
 
-    def create_objective_list(self):
+    def create_objective_list(self, customer):
+        customer.loc = self.game.customers_locs[customer.id]
         objectives = []
-        for _ in range(self.current_order['burger']):
+        for _ in range(customer.burger):
             objectives.append(self.food_finder.get_closest_burger(self.hero_pos))
 
-        for _ in range(self.current_order['fries']):
+        for _ in range(customer.french_fries):
             objectives.append(self.food_finder.get_closest_fries(self.hero_pos))
 
-        objectives.append(self.game.customers_locs[self.game.customers[self.customer_number].id])
-        self.objectives = objectives
+        objectives.append(customer.loc)
+        return objectives
 
-    def _dist(self, loc):
-        return abs(self.hero_pos[0] - loc[0]) + abs(self.hero_pos[1] - loc[1])
+    def _dist(self, start, loc):
+        return abs(start[0] - loc[0]) + abs(start[1] - loc[1])
+
+    def customer_cost_function(self, customer):
+        objectives = self.create_objective_list(customer)
+        cost = 0
+        for i in range(len(objectives) - 1):
+            cost += self._dist(objectives[i], objectives[i + 1])
+        return cost
+
+    def smallest_order(self, game):
+        customers = game.customers
+        best = min(customers, key=self.customer_cost_function)
+        return best
