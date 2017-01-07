@@ -31,11 +31,9 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 def pathfinding(state, start, target, size):
     print('calling pathfinder...')
     direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
+                                     #(start[1], start[0]), (target[1], target[0]) ))
     print('A Star returned ' + direction_)
-    if direction_ == 'Stay':
-        direction_ = choice(['North', 'South', 'East', 'West'])
 
-    print('Reponse is: ' + direction_)
     return direction_
 
 
