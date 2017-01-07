@@ -72,14 +72,7 @@ class NullJsBot(Bot):
 
         self.maybe_kill_someone()
 
-        objective = self.objectives[0]
-
-        direction = None
-        tries = 0
-
-        while direction is None and tries < min(len(self.objectives), 1):
-            direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[tries], state['game']['board']['size'])
-            tries += 1
+        direction = pathfinding(state['game']['board']['tiles'], self.hero_pos, self.objectives[0], state['game']['board']['size'])
 
         if direction is None:
             print('RANDOM MOVE')
