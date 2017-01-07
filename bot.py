@@ -27,7 +27,6 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 #         direction = None
 #     return direction
 
-
 # AStar
 def pathfinding(state, start, target, size):
     print('calling pathfinder...')
