@@ -57,8 +57,8 @@ class Game:
                     self.taverns_locs.add((row, col))
                 elif obj == SPIKE:
                     self.spikes_locs.add((row, col))
-                elif obj == CUSTOMER:
-                    id = self.board.tiles[row][col][-1]
+                elif isinstance(obj, tuple):
+                    id = obj[-1]
                     self.customers_locs[id] = (row, col)
 
 
@@ -83,7 +83,7 @@ class Board:
             return HeroTile(match.group(1))
         match = re.match(r'C([0-9])', tile_string)
         if match:
-            return CUSTOMER
+            return (CUSTOMER, match.group(1))
 
     def __parseTiles(self, tiles):
         vector = [tiles[i:i+2] for i in range(0, len(tiles), 2)]
@@ -99,7 +99,7 @@ class Board:
         """True if can walk through."""
         x, y = loc
         pos = self.tiles[x][y]
-        return (pos != WALL) and (pos != TAVERN) and (pos != CUSTOMER) and not isinstance(pos, FriesTile) and not isinstance(pos, BurgerTile)
+        return (pos != WALL) and (pos != TAVERN) and isinstance(pos, tuple) and not isinstance(pos, FriesTile) and not isinstance(pos, BurgerTile)
 
     def to(self, loc, direction):
         """Calculate a new location given the direction."""
