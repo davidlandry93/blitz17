@@ -46,20 +46,27 @@ class NullJsBot(Bot):
         self.game = None
         self.objectives = []
         self.customer_number = 0
+        self.life = 0
+        self.calorie = 0
 
     def move(self, state):
         self.game = Game(state)
         self.food_finder = FoodFinder(self.game)
         self.hero_pos = (state['hero']['pos']['x'], state['hero']['pos']['y'])
+        self.life = state['hero']['life']
+        self.life = state['hero']
 
         smallest_order(self.game)
 
         if not self.current_order:
-            self.current_order = {'burger': self.game.customers[self.customer_number].burger, 'fries': self.game.customers[self.customer_number].french_fries}
-            self.create_objective_list()
+            self.current_order = smallest_order(self.game)
+            self.current_order.loc = self.game.customers[self.current_order.id].id
+            print(self.current_order.loc)
+
+        if self.life < 25 and self.calorie > 30:
+            self.objectives.insert(0, self.food_finder.get_closest_soda(self.hero_pos))
 
         objective = self.objectives[0]
-        print(self.objectives)
 
         if self._dist(objective) == 1:
             self.objectives.pop(0)
@@ -68,8 +75,6 @@ class NullJsBot(Bot):
                 self.current_order = None
                 self.customer_number += 1
 
-        print(self.hero_pos)
-        print(objective)
         return pathfinding(state['game']['board']['tiles'], self.hero_pos, objective, state['game']['board']['size'])
 
     def create_objective_list(self):

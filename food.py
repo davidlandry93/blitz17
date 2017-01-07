@@ -12,6 +12,9 @@ class FoodFinder:
     def get_closest_fries(self, player_loc):
         return self._get_closest_food(list(self.game.fries_locs), player_loc)
 
+    def get_closest_soda(self, player_loc):
+        return self._get_closest_food(list(self.game.taverns_locs), player_loc)
+
     def _get_closest_food(self, food_list, player_loc):
         best = {"dist": inf, "loc": None}
         for food_loc in food_list:
