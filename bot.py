@@ -12,20 +12,13 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 def pathfinding(state, start, target, size):
     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
 
-    print('calling pathfinder...')
-
     response = requests.get(pathfinding_url, params=payload)
-
-    print('Reponse is: ' + str(response.json()))
 
     try:
         direction = response.json()['direction']
     except KeyError:
         direction = None
     return direction
-
-
-
 
 
 class Bot:
@@ -84,15 +77,28 @@ class NullJsBot(Bot):
         customer.loc = self.game.customers_locs[customer.id]
         objectives = []
         last_pos = self.hero_pos
-        for _ in range(max(0, customer.burger - self.inventory['burger'])):
-            pos = self.food_finder.get_closest_burger(last_pos, self.id, objectives)
-            objectives.append(pos)
-            last_pos = pos
+        burger_required = max(0, customer.burger - self.inventory['burger'])
+        fries_required = max(0, customer.french_fries - self.inventory['fries'])
 
-        for _ in range(max(0, customer.french_fries - self.inventory['fries'])):
-            pos = self.food_finder.get_closest_fries(last_pos, self.id, objectives)
-            objectives.append(pos)
-            last_pos = pos
+        total = burger_required + fries_required
+        while total > 0:
+
+            if fries_required > 0 and burger_required > 0:
+                pos = self.food_finder.get_closest_burger_or_fries(last_pos, self.id, objectives)
+                objectives.append(pos)
+                last_pos = pos
+
+            elif burger_required > 0:
+                pos = self.food_finder.get_closest_burger(last_pos, self.id, objectives)
+                objectives.append(pos)
+                last_pos = pos
+
+            elif fries_required > 0:
+                pos = self.food_finder.get_closest_fries(last_pos, self.id, objectives)
+                objectives.append(pos)
+                last_pos = pos
+
+            total -= 1
 
         objectives.append(customer.loc)
         return objectives
