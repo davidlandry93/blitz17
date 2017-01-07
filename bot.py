@@ -15,11 +15,10 @@ pathfinding_url = 'http://game.blitz.codes:8081/pathfinding/direction'
 def pathfinding(state, start, target, size):
     payload = {'map': state, 'size': size, 'start': '(' + str(start[0]) + ',' + str(start[1]) + ')', 'target': '(' + str(target[0]) + ',' + str(target[1]) + ')'}
 
-    response = requests.get(pathfinding_url, params=payload)
-
     try:
+        response = requests.get(pathfinding_url, params=payload, timeout=0.9)
         direction = response.json()['direction']
-    except KeyError:
+    except (KeyError, requests.exceptions.Timeout):
         direction = None
     return direction
 
@@ -158,10 +157,11 @@ class NullJsBot(Bot):
                 break
 
     def nearby_food(self):
-        possible_locations = [(self.hero_pos[0] - 1, self.hero_pos[1], 'North'),
-                              (self.hero_pos[0] + 1, self.hero_pos[1], 'South'),
-                              (self.hero_pos[0], self.hero_pos[1] - 1, 'West'),
-                              (self.hero_pos[0], self.hero_pos[1] + 1, 'East')]
+        size = self.game.state['game']['board']['size']
+        possible_locations = [(max(0, self.hero_pos[0] - 1), self.hero_pos[1], 'North'),
+                              (min(self.hero_pos[0] + 1, size - 1), self.hero_pos[1], 'South'),
+                              (self.hero_pos[0], max(self.hero_pos[1] - 1, 0), 'West'),
+                              (self.hero_pos[0], min(self.hero_pos[1] + 1, size - 1), 'East')]
 
         for location in possible_locations:
             tile = self.game.board.tiles[int(location[0])][int(location[1])]
