@@ -9,6 +9,8 @@ class FoodFinder:
     def get_closest_burger(self, player_loc, player_id, objective_list):
         burger_list = []
         for key, val in self.game.burger_locs.items():
+            if key in objective_list:
+                print('KEY ALREADY THERE')
             if val != player_id and key not in objective_list:
                 burger_list.append(key)
         return self._get_closest(burger_list, player_loc)
@@ -16,6 +18,8 @@ class FoodFinder:
     def get_closest_fries(self, player_loc, player_id, objective_list):
         fries_list = []
         for key, val in self.game.fries_locs.items():
+            if key in objective_list:
+                print('KEY ALREADY THERE')
             if val != player_id and key not in objective_list:
                 fries_list.append(key)
         return self._get_closest(fries_list, player_loc)

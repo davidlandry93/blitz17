@@ -28,7 +28,7 @@ class Bot:
 
 
 class NullJsBot(Bot):
-    KILL_DISTANCE = 2
+    KILL_DISTANCE = 1
 
     def __init__(self):
         self.current_customer = None  # {'burger': 1, 'fries': 2}
@@ -85,14 +85,12 @@ class NullJsBot(Bot):
             objectives.append(pos)
             last_pos = pos
 
-        objectives = sorted(objectives, key=lambda x: self._dist(self.hero_pos, x))
-
         objectives.append(customer.loc)
         return objectives
 
     def _dist(self, start, loc):
         return abs(start[0] - loc[0]) + abs(start[1] - loc[1])
-        
+
     def customer_cost_function(self, customer):
         objectives = self.create_objective_list(customer)
         cost = 0
@@ -116,7 +114,7 @@ class NullJsBot(Bot):
 
         for h in other_heros:
             h_pos = (h.pos['x'], h.pos['y'])
-            if h.life + 35 < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
+            if h.life + 45 < our_hero.life and self._dist(self.hero_pos, h_pos) <= self.KILL_DISTANCE:
                 self.objectives = [h_pos]
                 print('ATTACK')
                 break
