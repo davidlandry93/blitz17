@@ -32,7 +32,7 @@ def pathfinding(state, start, target, size):
     print('calling pathfinder...')
     direction_ = direction(find_path(Board({'size': size, 'tiles': state}), start, target))
                                      #(start[1], start[0]), (target[1], target[0]) ))
-    print('A Star returned ' + direction_)
+    print('A Star returned ' + str(direction_))
 
     return direction_
 
