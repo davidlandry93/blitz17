@@ -1,3 +1,7 @@
+# blitz17
+
+The winning AI at the 2017 Coveo Blitz competition.
+
 ### Is you base path the right one ?? ###
 
 Works with python2 and python3.
