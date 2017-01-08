@@ -1,8 +1,8 @@
 # blitz17
 
-The winning AI at the 2017 Coveo Blitz competition.
+The winning AI at the 2017 [Coveo Blitz](http://blitz.coveo.com/) competition. Made with love in 8 hours.
 
-### Is you base path the right one ?? ###
+## Usage
 
 Works with python2 and python3.
 
